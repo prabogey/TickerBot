@@ -7,7 +7,6 @@ MarkupSafe==0.23
 Polygon2==2.0.7
 Pygments==2.2.0
 TTFQuery==1.0.5
-VPython==6.11
 Werkzeug==0.11.10
 altgraph==0.10.2
 backports-abc==0.5
