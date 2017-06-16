@@ -40,12 +40,12 @@ def webhook():
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
-                    if (message_text.length() < 5):
+                    if (message_text.length() < 6):
                         stock_price = ysq.get_bid_realtime(message_text.upper())
-                        message_to_send = "The stock price for {} is {}".format(message_text, stock_price)
-                    if "previous close" in message_text:
-                        message_text = re.sub("previous close", "", message_text)
-                        message_to_send = "The previous close for {} is {}".format(message_text, ysq.get_previous_close(message_text.upper()))
+                        message_to_send = "The stock price for {} is {}".format(message_text.upper(), stock_price)
+                    # if "previous close" in message_text:
+                    #     message_text = re.sub("previous close", "", message_text)
+                    #     message_to_send = "The previous close for {} is {}".format(message_text, ysq.get_previous_close(message_text.upper()))
                     send_message(sender_id, message_to_send)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
