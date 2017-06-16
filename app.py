@@ -41,11 +41,12 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
                     message_to_send = message_text
-                    message_to_send = True if re.search(r"(?i)previous|close", message_text) != None else False
-                    # if re.search(r"(?i)previous|close", message_text) != None:
-                    #     stock = Share(re.sub(r"((?i)previous|close","", message_text))
-                    #     stock_price = stock.get_prev_close()
-                    #     message_to_send = "The previous close for {} is {}".format(stock.get_name(), stock_price())
+                    if re.search(r"(?i)previous|close", message_text) != None:
+                        stock = Share(re.sub(r"((?i)previous|close","", message_text))
+                        stock_price = stock.get_prev_close()
+                        send_message(sender_id, "yes it does")
+                        break
+                        # message_to_send = "The previous close for {} is {}".format(stock.get_name(), stock_price())
                     # else:
                     #     stock = Share(message_text.upper())
                     #     stock_price = stock.get_price()
