@@ -1,3 +1,4 @@
 from yahoo_finance import Share
-aapl = Share('AAPL')
-print(aapl.get_price())
+aapl = Share('APPLE')
+stock = aapl.get_price()
+print(stock == None)

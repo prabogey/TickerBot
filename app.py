@@ -43,7 +43,7 @@ def webhook():
                     #if (message_text.length() < 6):
                     stock = Share(message_text.upper())
                     stock_price = stock.get_price()
-                    if (stock_price == "NONE"):
+                    if (stock_price == None):
                         stock_price = "could not be found"
                     message_to_send = "The stock price for {} is {}".format(message_text.upper(), stock_price)
                     # if "previous close" in message_text:
