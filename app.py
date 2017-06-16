@@ -49,7 +49,7 @@ def webhook():
                         if (stock_price == None):
                             message_to_send = "error"
                         else:
-                            message_to_send = "The previous close for {} is {}".format(stock.get_name(), stock_price())
+                            message_to_send = "The previous close for {} is {}".format(message_text, stock_price)
                         send_message(sender_id, message_to_send)
                     # else:
                     #     stock = Share(message_text.upper())
