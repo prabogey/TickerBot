@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import json
 import ystockquote as ysq
@@ -39,9 +40,12 @@ def webhook():
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
-
-                    stock_price = ysq.get_price_book(message_text.upper())
-                    message_to_send = "The stock price for {} is {}".format(message_text, stock_price)
+                    if (message_text.length() < 5):
+                        stock_price = ysq.get_bid_realtime(message_text.upper())
+                        message_to_send = "The stock price for {} is {}".format(message_text, stock_price)
+                    if "previous close" in message_text:
+                        message_text = re.sub("previous close", "", message_text)
+                        message_to_send = "The previous close for {} is {}".format(message_text, ysq.get_previous_close(message_text.upper()))
                     send_message(sender_id, message_to_send)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
@@ -79,11 +83,9 @@ def send_message(recipient_id, message_text):
         log(r.status_code)
         log(r.text)
 
-
 def log(message):  # simple wrapper for logging to stdout on heroku
     print str(message)
     sys.stdout.flush()
-
 
 if __name__ == '__main__':
     app.run(debug=True)
