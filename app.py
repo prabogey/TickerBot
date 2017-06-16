@@ -40,14 +40,13 @@ def webhook():
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
-                    message_to_send = message_text
                     if re.search(r"(?i)previous|close", message_text) != None:
+                        log("true")
                         message_text = re.sub(r"(?i)previous|close", "", message_text)
                         message_text = message_text.upper()
                         stock = Share(message_text)
                         stock_price = stock.get_prev_close()
                         send_message(sender_id, stock_price)
-                        break
                         # message_to_send = "The previous close for {} is {}".format(stock.get_name(), stock_price())
                     # else:
                     #     stock = Share(message_text.upper())
@@ -56,7 +55,7 @@ def webhook():
                     #         message_to_send = "Please enter a stock symbol, not a company name"
                     #     else:
                     #         message_to_send = "The stock price for {} is {}".format(stock.get_name(), stock_price)
-                    send_message(sender_id, message_to_send)
+                    # send_message(sender_id, message_to_send)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
