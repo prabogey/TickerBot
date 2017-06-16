@@ -42,9 +42,11 @@ def webhook():
                     message_text = messaging_event["message"]["text"]  # the message's text
                     message_to_send = message_text
                     if re.search(r"(?i)previous|close", message_text) != None:
-                        stock = Share(re.sub(r"((?i)previous|close","", message_text))
+                        message_text = re.sub(r"(?i)previous|close", "", message_text)
+                        message_text = message_text.upper()
+                        stock = Share(message_text)
                         stock_price = stock.get_prev_close()
-                        send_message(sender_id, "yes it does")
+                        send_message(sender_id, stock_price)
                         break
                         # message_to_send = "The previous close for {} is {}".format(stock.get_name(), stock_price())
                     # else:
