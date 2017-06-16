@@ -2,7 +2,7 @@ import os
 import re
 import sys
 import json
-import ystockquote as ysq
+from yahoo_finance import Share
 
 import requests
 from flask import Flask, request
@@ -41,7 +41,8 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
                     #if (message_text.length() < 6):
-                    stock_price = ysq.get_bid_realtime(message_text.upper())
+                    stock = Share(message_text.upper())
+                    stock_price = stock.get_price()
                     message_to_send = "The stock price for {} is {}".format(message_text.upper(), stock_price)
                     # if "previous close" in message_text:
                     #     message_text = re.sub("previous close", "", message_text)
