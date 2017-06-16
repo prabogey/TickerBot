@@ -42,22 +42,21 @@ def webhook():
                     message_text = messaging_event["message"]["text"]  # the message's text
                     if re.search(r"(?i)previous|close", message_text) != None:
                         message_text = re.sub(r"(?i)previous|close", "", message_text)
-                        send_message(sender_id, message_text.upper())
                         message_text = message_text.upper()
                         stock = Share(message_text)
                         stock_price = stock.get_prev_close()
                         if (stock_price == None):
                             message_to_send = "error"
                         else:
-                            message_to_send = "The previous close for {} is {}".format(message_text, stock_price)
-                        send_message(sender_id, message_to_send)
-                    # else:
-                    #     stock = Share(message_text.upper())
-                    #     stock_price = stock.get_price()
-                    #     if (stock_price == None):
-                    #         message_to_send = "Please enter a stock symbol, not a company name"
-                    #     else:
-                    #         message_to_send = "The stock price for {} is {}".format(stock.get_name(), stock_price)
+                            message_to_send = "The previous close for {} is {}".format(message_text.strip(), stock_price)
+                    else:
+                        stock = Share(message_text.upper())
+                        stock_price = stock.get_price()
+                        if (stock_price == None):
+                            message_to_send = "Please enter a stock symbol, not a company name"
+                        else:
+                            message_to_send = "The stock price for {} is {}".format(message_text.strip(), stock_price)
+                    send_message(sender_id, message_to_send)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
