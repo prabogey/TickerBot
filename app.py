@@ -45,7 +45,7 @@ def webhook():
                         stock = Share(re.sub(r"((?i)previous|close","", message_text))
                         stock_price = stock.get_prev_close()
                         message_to_send = "The previous close for {} is {}".format(stock.get_name(), stock_price())
-                    elif len(message_text) < 6:
+                    else:
                         stock = Share(message_text.upper())
                         stock_price = stock.get_price()
                         if (stock_price == None):
