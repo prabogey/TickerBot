@@ -40,8 +40,8 @@ def webhook():
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
-                    if re.search(r"(?i)previous|close", message_text) != None:
-                        message_text = re.sub(r"(?i)previous|close", "", message_text)
+                    if re.search(r"(?i)close", message_text) != None:
+                        message_text = re.sub(r"(?i)previous|close|for", "", message_text)
                         message_text = message_text.upper()
                         stock = Share(message_text)
                         stock_price = stock.get_prev_close()
