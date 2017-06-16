@@ -44,6 +44,7 @@ def webhook():
                         message_text = re.sub(r"(?i)previous|close|for", "", message_text)
                         message_text = message_text.upper()
                         stock = Share(message_text)
+                        stock.refresh()
                         stock_price = stock.get_prev_close()
                         if (stock_price == None):
                             message_to_send = "error"
@@ -51,6 +52,7 @@ def webhook():
                             message_to_send = "The previous close for {} is {}".format(message_text.strip(), stock_price)
                     else:
                         stock = Share(message_text.upper())
+                        stock.refresh()
                         stock_price = stock.get_price()
                         if (stock_price == None):
                             message_to_send = "Please enter a stock symbol, not a company name"
