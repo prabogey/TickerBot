@@ -92,6 +92,8 @@ def webhook():
                                         message_to_send = "could not find symbol"
                                     else:
                                         message_to_send = "The Days High for {} is {}".format(stock_symb.upper().strip(), stock_price)
+                                except:
+                                    message_to_send = "ERROR! Type HELP to get a list a commands"
                         elif re.search(r"(?i)close", message_text) != None:
                             stock_symb = re.sub(r"(?i)previous|close|for", "", message_text)
                             try:
