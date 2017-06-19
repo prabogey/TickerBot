@@ -52,7 +52,7 @@ def webhook():
                                 if (stock_price == None):
                                     message_to_send = "error"
                                 else:
-                                    message_to_send = "The Market Capitilization for {} is {}".format(message_text, stock_price)
+                                    message_to_send = "The Market Capitilization for {} is {}".format(stock_symb.upper().strip(), stock_price)
                             except:
                                 message_to_send = "Could not recognize the symbol"
                         elif re.search(r"(?i)open|start", message_text) != None:
@@ -65,7 +65,7 @@ def webhook():
                                 if (stock_price == None):
                                     message_to_send = "error"
                                 else:
-                                    message_to_send = "The opening price for {} is {}".format(message_text, stock_price)
+                                    message_to_send = "The opening price for {} is {}".format(stock_symb.upper().strip(), stock_price)
                             except:
                                 message_to_send = "Could not recognize the symbol"
                         elif re.search(r"(?i)high", message_text) != None:
@@ -79,9 +79,19 @@ def webhook():
                                     if (stock_price == None):
                                         message_to_send = "error"
                                     else:
-                                        message_to_send = "The 52 wk high for {} is {}".format(message_text, stock_price)
+                                        message_to_send = "The 52 wk high for {} is {}".format(stock_symb.upper().strip(), stock_price)
                                 except:
                                     message_to_send = "Could not recognize the symbol"
+                            else:
+                                stock_symb = re.sub(r"(?i)high", "", message_text)
+                                try:
+                                    stock = Share(stock_symb.strip())
+                                    log(stock_symb.strip())
+                                    stock_price = stock.get_days_high()
+                                    if (stock_price == None):
+                                        message_to_send = "could not find symbol"
+                                    else:
+                                        message_to_send = "The Days High for {} is {}".format(stock_symb.upper().strip(), stock_price)
                         elif re.search(r"(?i)close", message_text) != None:
                             stock_symb = re.sub(r"(?i)previous|close|for", "", message_text)
                             try:
@@ -91,7 +101,7 @@ def webhook():
                                 if (stock_price == None):
                                     message_to_send = "error"
                                 else:
-                                    message_to_send = "The previous close for {} is {}".format(message_text.strip(), stock_price)
+                                    message_to_send = "The previous close for {} is {}".format(stock_symb.upper().strip(), stock_price)
                             except:
                                 message_to_send = "Could not recognize the symbol"
                         elif message_text == "HELP":
