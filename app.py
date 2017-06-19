@@ -45,8 +45,8 @@ def webhook():
                         try:
                             stock = Share(stock_symb.strip())
                             log(stock_symb.strip())
-                            break
                             stock_price = stock.get_market_cap()
+                            log(stock_price)
                             if (stock_price == None):
                                 message_to_send = "error"
                             else:
