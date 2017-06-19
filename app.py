@@ -45,6 +45,7 @@ def webhook():
                         try:
                             stock = Share(stock_symb.strip())
                             log(stock_symb.strip())
+                            break
                             stock_price = stock.get_market_cap()
                             if (stock_price == None):
                                 message_to_send = "error"
@@ -52,8 +53,7 @@ def webhook():
                                 message_to_send = "The Market Capitilization for {} is {}".format(message_text, stock_price)
                         except:
                             message_to_send = "Could not recognize the symbol"
-
-                    if re.search(r"(?i)close", message_text) != None:
+                    else if re.search(r"(?i)close", message_text) != None:
                         stock_symb = re.sub(r"(?i)previous|close|for", "", message_text)
                         try:
                             stock_symb = stock_symb.upper()
@@ -66,7 +66,7 @@ def webhook():
                         except:
                             message_to_send = "Could not recognize the symbol"
                     else:
-                        stock = Share(message_text.upper())
+                        stock = Share(message_text)
                         stock_price = stock.get_price()
                         if (stock_price == None):
                             message_to_send = "Please enter a stock symbol, not a company name"
