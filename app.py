@@ -40,6 +40,7 @@ def webhook():
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
+                    message_to_send = "Error! Type HELP to get a list of commands"
                     try:
                         if re.search(r"(?i)market|cap|capitilazation", message_text) != None:
                             stock_symb = re.sub(r"(?i)market|cap|capitilazation","", message_text)
@@ -93,6 +94,8 @@ def webhook():
                                     message_to_send = "The previous close for {} is {}".format(message_text.strip(), stock_price)
                             except:
                                 message_to_send = "Could not recognize the symbol"
+                        else if message_text == "HELP":
+                            message_to_send = "Here is a list of commands"
                         else:
                             stock = Share(message_text)
                             stock_price = stock.get_price()
