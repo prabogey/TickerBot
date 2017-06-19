@@ -53,7 +53,7 @@ def webhook():
                                 message_to_send = "The Market Capitilization for {} is {}".format(message_text, stock_price)
                         except:
                             message_to_send = "Could not recognize the symbol"
-                    else if re.search(r"(?i)close", message_text) != None:
+                    elif re.search(r"(?i)close", message_text) != None:
                         stock_symb = re.sub(r"(?i)previous|close|for", "", message_text)
                         try:
                             stock_symb = stock_symb.upper()
