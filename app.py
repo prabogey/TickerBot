@@ -40,65 +40,68 @@ def webhook():
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
-                    if re.search(r"(?i)market|cap|capitilazation", message_text) != None:
-                        stock_symb = re.sub(r"(?i)market|cap|capitilazation","", message_text)
-                        try:
-                            stock = Share(stock_symb.strip())
-                            log(stock_symb.strip())
-                            stock_price = stock.get_market_cap()
-                            log(stock_price)
-                            if (stock_price == None):
-                                message_to_send = "error"
-                            else:
-                                message_to_send = "The Market Capitilization for {} is {}".format(message_text, stock_price)
-                        except:
-                            message_to_send = "Could not recognize the symbol"
-                    elif re.search(r"(?i)open|start", message_text) != None:
-                        stock_symb = re.sub(r"(?i)open|start","", message_text)
-                        try:
-                            stock = Share(stock_symb.strip())
-                            log(stock_symb.strip())
-                            stock_price = stock.get_open()
-                            log(stock_price)
-                            if (stock_price == None):
-                                message_to_send = "error"
-                            else:
-                                message_to_send = "The opening price for {} is {}".format(message_text, stock_price)
-                        except:
-                            message_to_send = "Could not recognize the symbol"
-                    elif re.search(r"(?i)high", message_text) != None:
-                        if re.search(r"(?i)year|52|52 wk|52 week", message_text) != None:
-                            stock_symb = re.sub(r"(?i)high|year|52|52 wk|52 week","", message_text)
+                    try:
+                        if re.search(r"(?i)market|cap|capitilazation", message_text) != None:
+                            stock_symb = re.sub(r"(?i)market|cap|capitilazation","", message_text)
                             try:
                                 stock = Share(stock_symb.strip())
                                 log(stock_symb.strip())
-                                stock_price = stock.get_year_high()
+                                stock_price = stock.get_market_cap()
                                 log(stock_price)
                                 if (stock_price == None):
                                     message_to_send = "error"
                                 else:
-                                    message_to_send = "The 52 wk high for {} is {}".format(message_text, stock_price)
+                                    message_to_send = "The Market Capitilization for {} is {}".format(message_text, stock_price)
                             except:
                                 message_to_send = "Could not recognize the symbol"
-                    elif re.search(r"(?i)close", message_text) != None:
-                        stock_symb = re.sub(r"(?i)previous|close|for", "", message_text)
-                        try:
-                            stock_symb = stock_symb.upper()
-                            stock = Share(stock_symb)
-                            stock_price = stock.get_prev_close()
-                            if (stock_price == None):
-                                message_to_send = "error"
-                            else:
-                                message_to_send = "The previous close for {} is {}".format(message_text.strip(), stock_price)
-                        except:
-                            message_to_send = "Could not recognize the symbol"
-                    else:
-                        stock = Share(message_text)
-                        stock_price = stock.get_price()
-                        if (stock_price == None):
-                            message_to_send = "Please enter a stock symbol, not a company name"
+                        elif re.search(r"(?i)open|start", message_text) != None:
+                            stock_symb = re.sub(r"(?i)open|start","", message_text)
+                            try:
+                                stock = Share(stock_symb.strip())
+                                log(stock_symb.strip())
+                                stock_price = stock.get_open()
+                                log(stock_price)
+                                if (stock_price == None):
+                                    message_to_send = "error"
+                                else:
+                                    message_to_send = "The opening price for {} is {}".format(message_text, stock_price)
+                            except:
+                                message_to_send = "Could not recognize the symbol"
+                        elif re.search(r"(?i)high", message_text) != None:
+                            if re.search(r"(?i)year|52|52 wk|52 week", message_text) != None:
+                                stock_symb = re.sub(r"(?i)high|year|52|52 wk|52 week","", message_text)
+                                try:
+                                    stock = Share(stock_symb.strip())
+                                    log(stock_symb.strip())
+                                    stock_price = stock.get_year_high()
+                                    log(stock_price)
+                                    if (stock_price == None):
+                                        message_to_send = "error"
+                                    else:
+                                        message_to_send = "The 52 wk high for {} is {}".format(message_text, stock_price)
+                                except:
+                                    message_to_send = "Could not recognize the symbol"
+                        elif re.search(r"(?i)close", message_text) != None:
+                            stock_symb = re.sub(r"(?i)previous|close|for", "", message_text)
+                            try:
+                                stock_symb = stock_symb.upper()
+                                stock = Share(stock_symb)
+                                stock_price = stock.get_prev_close()
+                                if (stock_price == None):
+                                    message_to_send = "error"
+                                else:
+                                    message_to_send = "The previous close for {} is {}".format(message_text.strip(), stock_price)
+                            except:
+                                message_to_send = "Could not recognize the symbol"
                         else:
-                            message_to_send = "The stock price for {} is {}".format(message_text.strip().upper(), stock_price)
+                            stock = Share(message_text)
+                            stock_price = stock.get_price()
+                            if (stock_price == None):
+                                message_to_send = "Please enter a stock symbol, not a company name"
+                            else:
+                                message_to_send = "The stock price for {} is {}".format(message_text.strip().upper(), stock_price)
+                        except:
+                            message_to_send = "There was some error in your request, type HELP to get a list of commands"
                     send_message(sender_id, message_to_send)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
