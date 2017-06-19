@@ -42,10 +42,9 @@ def webhook():
                     message_text = messaging_event["message"]["text"]  # the message's text
                     if re.search(r"(?i)market|cap|capitilazation", message_text) != None:
                         stock_symb = re.sub(r"(?i)market|cap|capitilazation","", message_text)
-                        message_to_send = "sending message"
-                        break
                         try:
                             stock = Share(stock_symb.strip())
+                            log(stock_symb.strip())
                             stock_price = stock.get_market_cap()
                             if (stock_price == None):
                                 message_to_send = "error"
