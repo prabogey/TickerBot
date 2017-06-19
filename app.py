@@ -42,22 +42,29 @@ def webhook():
                     message_text = messaging_event["message"]["text"]  # the message's text
                     if re.search(r"(?i)market|cap|capitilazation", message_text) != None:
                         stock_symb = re.sub(r"(?i)market|cap|capitilazation","", message_text)
-                        stock = Share(stock_symb.strip())
-                        stock_price = stock.get_market_cap()
-                        if (stock_price == None):
-                            message_to_send = "error"
-                        else:
-                            message_to_send = "The Market Capitilization for {} is {}".format(message_text, stock_price)
+                        try:
+                            stock = Share(stock_symb.strip())
+                            stock_price = stock.get_market_cap()
+                            if (stock_price == None):
+                                message_to_send = "error"
+                            else:
+                                message_to_send = "The Market Capitilization for {} is {}".format(message_text, stock_price)
+                        except:
+                            message_to_send = "Could not recognize the symbol"
+
                     if re.search(r"(?i)close", message_text) != None:
                         stock_symb = re.sub(r"(?i)previous|close|for", "", message_text)
-                        stock_symb = stock_symb.upper()
-                        stock = Share(stock_symb)
-                        stock.refresh()
-                        stock_price = stock.get_prev_close()
-                        if (stock_price == None):
-                            message_to_send = "error"
-                        else:
-                            message_to_send = "The previous close for {} is {}".format(message_text.strip(), stock_price)
+                        try:
+                            stock_symb = stock_symb.upper()
+                            stock = Share(stock_symb)
+                            stock.refresh()
+                            stock_price = stock.get_prev_close()
+                            if (stock_price == None):
+                                message_to_send = "error"
+                            else:
+                                message_to_send = "The previous close for {} is {}".format(message_text.strip(), stock_price)
+                        except:
+                            message_to_send = "Could not recognize the symbol"
                     else:
                         stock = Share(message_text.upper())
                         stock.refresh()
