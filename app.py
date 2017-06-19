@@ -100,8 +100,8 @@ def webhook():
                                 message_to_send = "Please enter a stock symbol, not a company name"
                             else:
                                 message_to_send = "The stock price for {} is {}".format(message_text.strip().upper(), stock_price)
-                        except:
-                            message_to_send = "There was some error in your request, type HELP to get a list of commands"
+                    except:
+                        message_to_send = "There was some error in your request, type HELP to get a list of commands"
                     send_message(sender_id, message_to_send)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
