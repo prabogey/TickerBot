@@ -94,7 +94,7 @@ def webhook():
                                     message_to_send = "The previous close for {} is {}".format(message_text.strip(), stock_price)
                             except:
                                 message_to_send = "Could not recognize the symbol"
-                        else if message_text == "HELP":
+                        elif message_text == "HELP":
                             message_to_send = "Here is a list of commands"
                         else:
                             stock = Share(message_text)
