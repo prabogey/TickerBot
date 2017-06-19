@@ -41,9 +41,9 @@ def webhook():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
                     if re.search(r"(?i)market|cap|capitilazation", message_text) != None:
-                        message_text = re.sub(r"(?i)market|cap|capitilazation","", message_text)
-                        message_text = message_text.upper()
-                        stock = Share(message_text)
+                        stock_symb = re.sub(r"(?i)market|cap|capitilazation","", message_text)
+                        stock_symb = stock_symb.upper().strip()
+                        stock = Share(stock_symb)
                         stock.refresh()
                         stock_price = stock.get_market_cap()
                         if (stock_price == None):
@@ -51,9 +51,9 @@ def webhook():
                         else:
                             message_to_send = "The Market Capitilization for {} is {}".format(message_text, stock_price)
                     if re.search(r"(?i)close", message_text) != None:
-                        message_text = re.sub(r"(?i)previous|close|for", "", message_text)
-                        message_text = message_text.upper()
-                        stock = Share(message_text)
+                        stock_symb = re.sub(r"(?i)previous|close|for", "", message_text)
+                        stock_symb = stock_symb.upper()
+                        stock = Share(stock_symb)
                         stock.refresh()
                         stock_price = stock.get_prev_close()
                         if (stock_price == None):

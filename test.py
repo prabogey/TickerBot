@@ -1,11 +1,8 @@
 from yahoo_finance import Share
 import re
 
-aapl = Share('AAPL')
+#aapl = Share('AAPL')
 x = input()
-if re.search(r"(?i)previous|close", x) != None:
-    x = re.sub(r"(?i)previous|close", "", x)
-    stock = Share(x.upper())
-    print(stock.get_prev_close())
-# if
-#     print("yes")
+message_text = re.sub(r"(?i)market|cap|capitilazation","", x)
+stock = Share(message_text.strip())
+print(stock.get_market_cap())
