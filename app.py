@@ -133,7 +133,7 @@ def getShare(strTick):
     return stock
 
 def messageMaker(cat, tup1):
-    return "The {} for {} is {}".format(cat, tup1[0], tup1[1])
+    return "The {} for {} is {}".format(cat, tup1[0].upper().strip(), tup1[1])
 
 def getCurrent(symb):
     symb.upper()
