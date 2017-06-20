@@ -106,7 +106,7 @@ def webhook():
                         else: # if the input is just a stock symbol
                             name_price = getCurrent(message_text)
                             if not name_price[1] == None:
-                                message_to_send = messageMaker("current share price", name_price[0])
+                                message_to_send = messageMaker("current share price", name_price)
                             else:
                                 message_to_send = error_notfound
                     except:
