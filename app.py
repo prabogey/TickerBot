@@ -40,7 +40,9 @@ def webhook():
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
-                    message_to_send = "Error! Type HELP to get a list of commands"
+
+                    exceptMessage = "Error! Type HELP to get a list of commands"
+                    error_notfound = "Could not find that stock symbol. Error 01 - please enter a valid stock symbol"
                     try:
                         if re.search(r"(?i)market|cap|capitilazation", message_text) != None:
                             stock_symb = re.sub(r"(?i)market|cap|capitilazation","", message_text)
@@ -54,7 +56,7 @@ def webhook():
                                 else:
                                     message_to_send = "The Market Capitilization for {} is {}".format(stock_symb.upper().strip(), stock_price)
                             except:
-                                message_to_send = "Could not recognize the symbol"
+                                message_to_send = exceptMessage
                         elif re.search(r"(?i)open|start", message_text) != None:
                             stock_symb = re.sub(r"(?i)open|start","", message_text)
                             try:
@@ -67,33 +69,24 @@ def webhook():
                                 else:
                                     message_to_send = "The opening price for {} is {}".format(stock_symb.upper().strip(), stock_price)
                             except:
-                                message_to_send = "Could not recognize the symbol"
+                                message_to_send = exceptMessage
                         elif re.search(r"(?i)high", message_text) != None:
                             if re.search(r"(?i)year|52|52 wk|52 week", message_text) != None:
-                                stock_symb = re.sub(r"(?i)high|year|52|52 wk|52 week","", message_text)
                                 try:
-                                    stock = Share(stock_symb.strip())
-                                    log(stock_symb.strip())
-                                    stock_price = stock.get_year_high()
-                                    log(stock_price)
-                                    if (stock_price == None):
-                                        message_to_send = "error"
+                                    name_price = getYearHigh(message_text)
+                                    if not name_price[1] == None:
+                                        message_to_send = messageMaker("Year High", name_price)
                                     else:
-                                        message_to_send = "The 52 wk high for {} is {}".format(stock_symb.upper().strip(), stock_price)
-                                except:
-                                    message_to_send = "Could not recognize the symbol"
+                                        message_to_send = error_notfound;
                             else:
-                                stock_symb = re.sub(r"(?i)high", "", message_text)
                                 try:
-                                    stock = Share(stock_symb.strip())
-                                    log(stock_symb.strip())
-                                    stock_price = stock.get_days_high()
-                                    if (stock_price == None):
-                                        message_to_send = "could not find symbol"
+                                    name_price = getDayHigh(message_text)
+                                    if not name_price[1] == None:
+                                        message_to_send = messageMaker("Days High", name_price)
                                     else:
-                                        message_to_send = "The Days High for {} is {}".format(stock_symb.upper().strip(), stock_price)
+                                        message_to_send = error_notfound
                                 except:
-                                    message_to_send = "ERROR! Type HELP to get a list a commands"
+                                    message_to_send = exceptMessage
                         elif re.search(r"(?i)close", message_text) != None:
                             stock_symb = re.sub(r"(?i)previous|close|for", "", message_text)
                             try:
@@ -105,18 +98,17 @@ def webhook():
                                 else:
                                     message_to_send = "The previous close for {} is {}".format(stock_symb.upper().strip(), stock_price)
                             except:
-                                message_to_send = "Could not recognize the symbol"
+                                message_to_send = exceptMessage
                         elif message_text == "HELP":
                             message_to_send = "Here is a list of commands"
-                        else:
-                            stock = Share(message_text)
-                            stock_price = stock.get_price()
-                            if (stock_price == None):
-                                message_to_send = "Please enter a stock symbol, not a company name"
+                        else: # if the input is just a stock symbol
+                            name_price = getCurrent(message_text)
+                            if not name_price[1] == None:
+                                message_to_send = messageMaker("current share price", name_price[0])
                             else:
-                                message_to_send = "The stock price for {} is {}".format(message_text.strip().upper(), stock_price)
+                                message_to_send = error_notfound
                     except:
-                        message_to_send = "There was some error in your request, type HELP to get a list of commands"
+                        message_to_send = exceptMessage
                     send_message(sender_id, message_to_send)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
@@ -131,10 +123,44 @@ def webhook():
     return "ok", 200
 
 
+
+def getShare(strTick):
+    strTick = strTick.strip()
+    return Share(strTick).refresh()
+
+def messageMaker(cat, tup1):
+    return "The {} for {} is {}".format(cat, tup1[0], tup1[1])
+
+def getCurrent(symb):
+    symb.upper()
+    stock = getShare(symb)
+    return (symb, stock.get_price())
+
+def getYearHigh(symb):
+    symb = re.sub(r"(?i)high|year|52|52 week|52 wk","",symb).upper()
+    stock = getShare(symb)
+    return (symb, stock.get_year_high())
+
+def getOpen(symb):
+    return
+
+def getClose(symb):
+    return
+
+def getDayHigh(symb):
+    symb = re.sub(r"(?i)high","",symb).upper()
+    stock = getShare(symb)
+    return (symb, stock.get_days_high())
+
+def getMarketCap(symb):
+    return
+
+
+
+
+
 def send_message(recipient_id, message_text):
-
     log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_text))
-
     params = {
         "access_token": os.environ["PAGE_ACCESS_TOKEN"]
     }
