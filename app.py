@@ -128,7 +128,9 @@ def webhook():
 
 def getShare(strTick):
     strTick = strTick.strip()
-    return Share(strTick).refresh()
+    stock = Share(strTick)
+    stock.refresh()
+    return stock
 
 def messageMaker(cat, tup1):
     return "The {} for {} is {}".format(cat, tup1[0], tup1[1])

@@ -1,17 +1,20 @@
 from yahoo_finance import Share
 import re
 
-#aapl = Share('AAPL')
-message_text = input()
-if re.search(r"(?i)high", message_text) != None:
-    if re.search(r"(?i)year|52|52 wk|52 week", message_text) != None:
-        stock_symb = re.sub(r"(?i)high|year|52|52 wk|52 week","", message_text)
-        stock = Share(stock_symb.strip())
-        stock_price = stock.get_year_high()
-        print(stock_price)
-        if (stock_price == None):
-            message_to_send = "error"
-        else:
-            message_to_send = "The 52 wk high for {} is {}".format(message_text, stock_price)
-#stock = Share(message_text.strip())
-#print(stock.get_market_cap())
+def getShare(strTick):
+    strTick = strTick.strip()
+    stock = Share(strTick)
+    stock.refresh()
+    return stock
+
+def messageMaker(cat, tup1):
+    return "The {} for {} is {}".format(cat, tup1[0], tup1[1])
+
+def getCurrent(symb):
+    symb.upper()
+    stock = getShare(symb)
+    return (symb, stock.get_price())
+
+x = input()
+name_price = getCurrent(x)
+print(name_price)
