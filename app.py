@@ -57,7 +57,7 @@ def webhook():
 								 message_to_send = exceptMessage
 						elif re.search(r"(?i)open|start", message_text) != None:
 							try:
-								name_price = getMarketCap(message_text)
+								name_price = getOpen(message_text)
 								if not name_price[1] == None:
 									message_to_send = messageMaker("opening price", name_price)
 								else:
