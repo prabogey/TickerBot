@@ -78,6 +78,8 @@ def webhook():
                                         message_to_send = messageMaker("Year High", name_price)
                                     else:
                                         message_to_send = error_notfound;
+                                except:
+                                    message_to_send = exceptMessage
                             else:
                                 try:
                                     name_price = getDayHigh(message_text)
