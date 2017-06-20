@@ -152,7 +152,7 @@ def getClose(symb):
     return
 
 def getDayHigh(symb):
-    symb = re.sub(r"(?i)high","",symb).upper()
+    symb = re.sub(r"(?i)high|days|day","",symb).upper()
     stock = getShare(symb)
     return (symb, stock.get_days_high())
 
