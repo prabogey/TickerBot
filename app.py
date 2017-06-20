@@ -43,6 +43,7 @@ def webhook():
 
 					exceptMessage = "Error! Type HELP to get a list of commands"
 					error_notfound = "Could not find that stock symbol. Error 01 - please enter a valid stock symbol"
+					message_text = re.sub(r"(?i)for","",message_text)
 					try:
 						if re.search(r"(?i)market|cap|capitilazation", message_text) != None:
 							stock_symb = re.sub(r"(?i)market|cap|capitilazation","", message_text)
@@ -56,7 +57,7 @@ def webhook():
 								 message_to_send = exceptMessage
 						elif re.search(r"(?i)open|start", message_text) != None:
 							try:
-								name_price = getMarketCap(message_text)
+								name_price = getOpen(message_text)
 								if not name_price[1] == None:
 									message_to_send = messageMaker("opening price", name_price)
 								else:
@@ -141,7 +142,7 @@ def getOpen(symb):
 	return (symb, stock.get_open())
 
 def getClose(symb):
-	symb = re.sub(r"(?i)previous|close|for", "", symb).upper()
+	symb = re.sub(r"(?i)previous|close|prev", "", symb).upper()
 	stock = getShare(symb)
 	return (symb, stock.get_prev_close())
 
@@ -151,10 +152,9 @@ def getDayHigh(symb):
 	return (symb, stock.get_days_high())
 
 def getMarketCap(symb):
-	symb = re.sub(r"(?i)open|start","", symb)
+	symb = re.sub(r"(?i)market|cap|capitlization|value","", symb)
 	stock = getShare(symb)
 	return (symb, stock.get_market_cap())
-
 
 
 def send_message(recipient_id, message_text):
